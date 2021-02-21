@@ -35,7 +35,9 @@ public class DebtService {
         debtRepo.save(debt);
     }
     public List<Debt> debtInquiry(UUID cardNo){
-
+        if(!debtRepo.existsByCardNo(cardNo)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"hesaba ait borç yok");
+        }
         return debtRepo.findByCardNo(cardNo);
     }
 

@@ -10,6 +10,7 @@ public interface DebtRepository extends CrudRepository<Debt,Integer> {
 
     Iterable<Debt> findAll();
     List<Debt> findByCardNo(UUID cardNo);
+    boolean existsByCardNo(UUID cardNo);
     void deleteById(Integer id);
     boolean existsById(UUID id);
 }
