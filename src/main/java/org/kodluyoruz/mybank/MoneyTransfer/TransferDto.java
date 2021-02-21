@@ -21,6 +21,7 @@ public class TransferDto {
                 .fromIban(this.fromIban)
                 .toIban(this.toIban)
                 .amount(this.amount)
-                .description(this.description) .build();
+                .description(this.description)
+                .build();
     }
 }

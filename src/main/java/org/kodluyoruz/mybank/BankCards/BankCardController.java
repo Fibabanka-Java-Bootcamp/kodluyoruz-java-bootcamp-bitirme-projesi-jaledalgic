@@ -15,9 +15,9 @@ public class BankCardController {
         this.bankCardService = bankCardService;
     }
 
-    @PostMapping("/{iban}")
+    @PostMapping(value = "/{iban}",params = {"money"})
     @ResponseStatus(HttpStatus.CREATED)
-    public BankCardDto create(@PathVariable UUID iban, @RequestBody BankCardDto bankCardDto){
-        return bankCardService.create(iban, bankCardDto.toBankCardDto()).toBankCard();
+    public BankCardDto create(@PathVariable UUID iban, @RequestParam double money){
+        return bankCardService.create(iban, money).toBankCard();
     }
 }

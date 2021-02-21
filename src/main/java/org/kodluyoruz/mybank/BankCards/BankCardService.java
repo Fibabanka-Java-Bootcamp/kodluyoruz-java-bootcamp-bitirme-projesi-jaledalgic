@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.Random;
 import java.util.UUID;
 
 @Component
@@ -17,12 +19,19 @@ public class BankCardService {
         this.bankCardRepo = bankCardRepo;
         this.accountRepo = accountRepo;
     }
-    public BankCard create(UUID id, BankCard bankCard)  {
+    public BankCard create(UUID id, double money)  {
         Account account = accountRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found"+id));
+        BankCard bankCard=new BankCard();
+        Random random = new Random();
+        int x = random.nextInt(900) + 100;
         if(!bankCardRepo.existsBankCardByAccount(account)){
             bankCard.setAccount(account);
             bankCard.setCustomer(account.getCustomer());
+            bankCard.setOpeningDate(LocalDate.now());
+            bankCard.setLastDate(bankCard.getOpeningDate().plusYears(3));
+            bankCard.setSecureNum(x);
+            bankCard.setMoney(money);
             account.setSumMoney(bankCard.getMoney());
             return bankCardRepo.save(bankCard);
         }else {

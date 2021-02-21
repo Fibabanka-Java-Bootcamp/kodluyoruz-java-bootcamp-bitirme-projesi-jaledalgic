@@ -42,13 +42,20 @@ public class TransferService {
         double amount=transfer.getAmount();
         boolean isToAccount=accountRepo.existsById(toIban);
         boolean isFromAccount=accountRepo.existsById(fromIban);
-      if(isFromAccount){
+      if(isFromAccount ){
           Account fromAccount=accountRepo.findByIban(fromIban);
-          if(fromAccount.getSumMoney()>=amount) {
+          if(!bankCardRepo.existsByAccount(fromAccount)){
+              throw new ResponseStatusException(HttpStatus.NOT_FOUND,"hesabın banka kartı henüz tanımlanmamış"+fromAccount.getIban());
+          }
+          if(fromAccount.getSumMoney()>=amount ) {
             if (isToAccount) {
-                if (fromAccount.getAccountType().equals(AccountTypeEnum.birikim) || fromAccount.getAccountType().equals(AccountTypeEnum.vadesiz)) {
-                    fromAccount.setSumMoney(fromAccount.getSumMoney() - amount);
+                if (fromAccount.getAccountType().equals(AccountTypeEnum.birikim) ||
+                        fromAccount.getAccountType().equals(AccountTypeEnum.vadesiz)) {
                     Account toAccount=accountRepo.findByIban(toIban);
+                    if(!bankCardRepo.existsByAccount(toAccount)) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,"hesabın banka kartı henüz tanımlanmamış"+toAccount.getIban());
+                    }
+                    fromAccount.setSumMoney(fromAccount.getSumMoney() - amount);
                     toAccount.setSumMoney(toAccount.getSumMoney()+amount);
                     bankCardRepo.findByAccount(fromAccount).setMoney(fromAccount.getSumMoney());
                     bankCardRepo.findByAccount(toAccount).setMoney(toAccount.getSumMoney());

@@ -55,7 +55,7 @@ public class Account {
     public AccountDto toAccount(){
         return AccountDto.builder()
                 .iban(this.iban)
-                .accountNumber(accountNumber)
+                .accountNumber(this.accountNumber)
                 .accountType(this.accountType)
                 .sumMoney(this.sumMoney)
                 .currency(this.currency)

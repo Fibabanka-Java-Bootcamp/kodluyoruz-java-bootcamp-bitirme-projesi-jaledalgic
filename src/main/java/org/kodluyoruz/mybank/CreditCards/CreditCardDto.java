@@ -7,6 +7,7 @@ import org.kodluyoruz.mybank.Customers.Customer;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -16,13 +17,10 @@ import java.util.UUID;
 @Builder
 public class CreditCardDto {
     private UUID cardNo;
+    private int secureNum;
+    private LocalDate openingDate;
+    private LocalDate lastDate;
     private double boundary;
-    private double loan;
-    public CreditCard toCreditCardDto(){
-        return CreditCard.builder()
-                .cardNo(this.cardNo)
-                .boundary(this.boundary)
-                .loan(this.loan)
-                .build();
-    }
+    private double debt;
+
 }

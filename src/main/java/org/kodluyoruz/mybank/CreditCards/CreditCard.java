@@ -1,11 +1,15 @@
 package org.kodluyoruz.mybank.CreditCards;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.kodluyoruz.mybank.Accounts.Account;
 import org.kodluyoruz.mybank.Customers.Customer;
 import org.kodluyoruz.mybank.Shopping.Shop;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,7 +28,12 @@ public class CreditCard {
 
     private double boundary=0;
 
-    private double loan=0;
+    private double debt=0;
+
+    @Column(name = "secureNum")
+    private int secureNum;
+    private LocalDate openingDate;
+    private LocalDate lastDate;
 
     @OneToOne
     @JoinColumn(name = "account_iban", referencedColumnName = "iban")
@@ -40,8 +49,11 @@ public class CreditCard {
     public CreditCardDto toCreditCard(){
         return CreditCardDto.builder()
                 .cardNo(this.cardNo)
+                .secureNum(this.secureNum)
+                .openingDate(this.openingDate)
+                .lastDate(this.lastDate)
                 .boundary(this.boundary)
-                .loan(this.loan)
+                .debt(this.debt)
                 .build();
 
     }

@@ -2,6 +2,8 @@ package org.kodluyoruz.mybank.Customers;
 
 import org.kodluyoruz.mybank.Accounts.Account;
 import org.kodluyoruz.mybank.Accounts.AccountRepository;
+import org.kodluyoruz.mybank.CreditCards.CreditCard;
+import org.kodluyoruz.mybank.CreditCards.CreditCardRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,10 +14,12 @@ import java.util.List;
 public class CustomerService {
     private final CustomerRepository customerRepo;
     private final AccountRepository accountRepo;
+    private final CreditCardRepository creditCardRepo;
 
-    public CustomerService(CustomerRepository customerRepo, AccountRepository accountRepo) {
+    public CustomerService(CustomerRepository customerRepo, AccountRepository accountRepo, CreditCardRepository creditCardRepo) {
         this.customerRepo = customerRepo;
         this.accountRepo = accountRepo;
+        this.creditCardRepo = creditCardRepo;
     }
 
     public Customer create(Customer customer) {
@@ -30,28 +34,35 @@ public class CustomerService {
             return customerRepo.save(customer1);
     }
     public void delete(Integer id){
+        int count1=0;
+        int count2=0;
         boolean isAccount=accountRepo.existsByCustomer_Id(id);
-        if(isAccount) {
+        boolean isCreditCard=creditCardRepo.existsByCustomer_Id(id);
+        if(isAccount && isCreditCard) {
             List<Account> accounts = accountRepo.findByCustomer_Id(id);
-
-      int count=0;
-      if(accounts.size()>1) {
-          if (accounts.get(0).getSumMoney() == 0 && accounts.get(1).getSumMoney() == 0) {
+            List<CreditCard> creditCards=creditCardRepo.findByCustomer_Id(id);
+          for(int i=0;i<accounts.size();i++){
+              if(accounts.get(i).getSumMoney()==0){
+                  count1++;
+              }
+          }for(int i=0;i<creditCards.size();i++){
+                if(creditCards.get(i).getDebt()==0){
+                    count2++;
+                }
+            }
+          if(count1==accounts.size() && count2==creditCards.size()){
               customerRepo.deleteById(id);
-              accountRepo.deleteByCustomer_Id(id);
+              throw new ResponseStatusException(HttpStatus.NO_CONTENT,"müşteri silindi.");
           }
-      }else if(accounts.size()==1 && accounts.get(0).getSumMoney()==0){
-          customerRepo.deleteById(id);
-          accountRepo.deleteByCustomer_Id(id);
-
-      }
-      else{
-          throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"müşterinin hesabında para bulunuyor.");
-      }
+          else if(count1!=accounts.size()){
+              throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"müşterinin hesabında para bulunuyor.");
+          }
+          else{
+           throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"müşterinin kredi kartı borcu bulunuyor.");
+          }
         }else {
             customerRepo.deleteById(id);
-            accountRepo.deleteByCustomer_Id(id);
-
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,"müşteri silindi.");
         }
       }
 

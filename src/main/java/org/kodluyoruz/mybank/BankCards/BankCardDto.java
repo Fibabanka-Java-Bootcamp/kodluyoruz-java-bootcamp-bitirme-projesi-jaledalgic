@@ -4,8 +4,10 @@ import lombok.*;
 import org.kodluyoruz.mybank.Accounts.Account;
 import org.kodluyoruz.mybank.Customers.Customer;
 
+import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
@@ -13,12 +15,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BankCardDto {
-    private double money;
     private UUID cardNo;
-    public BankCard toBankCardDto() {
-        return BankCard.builder()
-                .cardNo(this.cardNo)
-                .money(this.money)
-                .build();
-    }
+    private int secureNum;
+    private LocalDate openingDate;
+    private LocalDate lastDate;
+    private double money;
+
 }

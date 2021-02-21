@@ -11,5 +11,6 @@ public interface BankCardRepository extends CrudRepository<BankCard, UUID> {
     BankCard findByAccount_AccountNumber(UUID id);
     Optional<BankCard> findByCardNo(UUID id);
     BankCard findByAccount(Account account);
+    boolean existsByAccount(Account account);
 
 }

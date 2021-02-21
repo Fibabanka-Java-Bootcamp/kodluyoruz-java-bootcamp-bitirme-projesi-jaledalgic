@@ -1,5 +1,6 @@
 package org.kodluyoruz.mybank.Accounts;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import org.kodluyoruz.mybank.Customers.CustomerDto;
 import org.kodluyoruz.mybank.Customers.CustomerService;
@@ -20,7 +21,7 @@ public class AccountController {
         }
         @PostMapping("/{id}/account")
         @ResponseStatus(HttpStatus.CREATED)
-        public AccountDto create(@PathVariable Integer id , @RequestBody AccountDto accountDto){
+        public AccountDto create(@PathVariable Integer id , @RequestBody AccountDto accountDto) throws JsonProcessingException {
             return accountService.create(id, accountDto.toAccountDto()).toAccount();
         }
         @DeleteMapping("/account/{account_number}")

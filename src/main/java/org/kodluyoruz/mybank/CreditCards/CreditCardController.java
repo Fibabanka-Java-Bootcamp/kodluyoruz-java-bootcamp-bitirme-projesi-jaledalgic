@@ -14,22 +14,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/creditcard")
 public class CreditCardController {
     private final CreditCardService creditCardService;
 
     public CreditCardController(CreditCardService creditCardService) {
-            this.creditCardService = creditCardService;
-        }
-        @PostMapping("/{iban}")
-        @ResponseStatus(HttpStatus.CREATED)
-        public CreditCardDto create(@PathVariable UUID iban, @RequestBody CreditCardDto creditCardDto){
-            return creditCardService.create(iban, creditCardDto.toCreditCardDto()).toCreditCard();
-        }
-        @GetMapping(value = "/ekstre",params = {"cardNo"})
-        public Map<String, LocalDate> ekstract(@RequestParam("cardNo") UUID cardNo){
-           return creditCardService.extract(cardNo);
-        }
+        this.creditCardService = creditCardService;
+    }
+
+    @PostMapping(value = "/{iban}",params = {"boundary"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreditCardDto create(@PathVariable UUID iban, @RequestParam double boundary) {
+        return creditCardService.create(iban, boundary);
+    }
+
+    @GetMapping(value = "/ekstre", params = {"cardNo"})
+    public @JsonIgnore Map<String, LocalDate> ekstract(@RequestParam("cardNo") UUID cardNo) {
+        return creditCardService.extract(cardNo);
+    }
+
+
 
 }
