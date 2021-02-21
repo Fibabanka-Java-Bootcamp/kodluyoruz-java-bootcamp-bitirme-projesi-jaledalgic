@@ -17,7 +17,7 @@ public class DebtController {
     }
 
     @GetMapping(value = "/debt", params = {"cardNo"})
-    public Debt debtInquiry(@RequestParam("cardNo") UUID cardNo) {
+    public List<Debt> debtInquiry(@RequestParam("cardNo") UUID cardNo) {
         return debtService.debtInquiry(cardNo);
     }
     @GetMapping(value = "/paymentFrom/{paymentType}", params = {"cardNo","payMoney","id"})

@@ -34,10 +34,9 @@ public class DebtService {
         debt.setDebtDate(LocalDate.now());
         debtRepo.save(debt);
     }
-    public Debt debtInquiry(UUID cardNo){
+    public List<Debt> debtInquiry(UUID cardNo){
 
-        return debtRepo.findByCardNo(cardNo)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"herhangi bir borç yok"));
+        return debtRepo.findByCardNo(cardNo);
     }
 
     public String  payment(Integer id, UUID cardNo, String paymentType, double amount) {
